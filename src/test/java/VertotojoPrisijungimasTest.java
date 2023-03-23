@@ -11,48 +11,62 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
 
-public class LoginTest {
+public class VertotojoPrisijungimasTest {
 
     @BeforeMethod
     public void setUp() {
-        Steps.setUp(Steps.URL);
+        Zingsniai.setUp(Zingsniai.URL);
     }
 
     @Test
-    public void sukurtiNaujaPaskyra() {
+    public void isitikintiKadNaujaPaskyraBuvoSukurta() {
 
-        Steps.paspaustiLinkaSukurtiNaujaPaskyra();
-        Steps.ivestiNaujusDuomenis(Constants.PRISIJUNGIMO_VARDAS, Constants.SLAPTAZODIS, Constants.SLAPTAZODIS);
-        Steps.paspaustiSukurtiMygtuka();
-        Steps.isitikintiKadVartotojasYraPrisijunges();
+        Zingsniai.paspaustiNuorodaSukurtiNaujaPaskyra();
+        Zingsniai.ivestiNaujusDuomenis(Konstantos.PRISIJUNGIMO_VARDAS, Konstantos.SLAPTAZODIS, Konstantos.SLAPTAZODIS);
+        Zingsniai.paspaustiSukurtiMygtuka();
+        Zingsniai.isitikintiKadVartotojasYraPrisijunges(Konstantos.AUTORIZACIJOS_PATVIRITNIMO_TEKSTAS + Konstantos.PRISIJUNGIMO_VARDAS);
     }
 
     @Test
     public void isitikintiKadPaskyraNebuvoSukurta() {
-        Steps.paspaustiLinkaSukurtiNaujaPaskyra();
-        Steps.ivestiNaujusDuomenis(Constants.PRISIJUNGIMO_VARDAS2, Constants.SLAPTAZODIS, Constants.NETEISINGAS_SLAPTAZODIS);
-        Steps.paspaustiSukurtiMygtuka();
-        Steps.isitikintiKadPaskyraNebuvoSukurtaIvedusNeteisingaiSlaptazodi();
+        Zingsniai.paspaustiNuorodaSukurtiNaujaPaskyra();
+        Zingsniai.ivestiNaujusDuomenis(Konstantos.PRISIJUNGIMO_VARDAS2, Konstantos.SLAPTAZODIS, Konstantos.NETEISINGAS_SLAPTAZODIS);
+        Zingsniai.paspaustiSukurtiMygtuka();
+        Zingsniai.isitikintiKadPaskyraNebuvoSukurtaIvedusNeteisingaiSlaptazodi();
     }
 
     @Test
-    public static void prisijugtiPriePaskyros() {
-        Steps.ivestiEsamusPrisijungimoDuomenis(Constants.PRISIJUNGIMO_VARDAS, Constants.SLAPTAZODIS);
-        Steps.paspaustiPrisijungimoMygtuka();
-        Steps.isitikintiKadVartotojasYraPrisijunges();
+    public static void isitikintiKadVartotojasPrisijungePriePaskyros() {
+        Zingsniai.ivestiEsamusPrisijungimoDuomenis(Konstantos.ESAMAS_VARTOTOJAS, Konstantos.SLAPTAZODIS);
+        Zingsniai.paspaustiPrisijungimoMygtuka();
+        Zingsniai.isitikintiKadVartotojasYraPrisijunges(Konstantos.AUTORIZACIJOS_PATVIRITNIMO_TEKSTAS + Konstantos.ESAMAS_VARTOTOJAS);
     }
 
     @Test
-    public void bandytiPrisijugtiIvedusNeteisingaSlaptazodi() {
-        Steps.ivestiEsamusPrisijungimoDuomenis(Constants.PRISIJUNGIMO_VARDAS, Constants.NETEISINGAS_SLAPTAZODIS);
-        Steps.paspaustiPrisijungimoMygtuka();
-        Steps.isitikintiKadVartotojasNeprisijunges();
+    public void isitikintiKadVartotojuiNepavykoPrisijungtiIvedusNetesingaSlaptazodi() {
+        Zingsniai.ivestiEsamusPrisijungimoDuomenis(Konstantos.ESAMAS_VARTOTOJAS, Konstantos.NETEISINGAS_SLAPTAZODIS);
+        Zingsniai.paspaustiPrisijungimoMygtuka();
+        Zingsniai.isitikintiKadVartotojasNeprisijunges();
+    }
+
+    @Test
+    public void isitikintiKadAutorizuotasVartotojasGaliNaudotiSistema() {
+        Zingsniai.ivestiEsamusPrisijungimoDuomenis(Konstantos.ESAMAS_VARTOTOJAS, Konstantos.SLAPTAZODIS);
+        Zingsniai.paspaustiPrisijungimoMygtuka();
+        Zingsniai.ivestiURLPasiekiamaTikAutorizuotiemsVartuotojams();
+        Zingsniai.isitikintiKadVartotojasYraPrisijunges(Konstantos.AUTORIZACIJOS_PATVIRITNIMO_TEKSTAS + Konstantos.ESAMAS_VARTOTOJAS);
+    }
+
+    @Test
+    public void isitikintiKadNeutorizuotasVartotojasNegaliNaudotisSistema() {
+        Zingsniai.ivestiURLPasiekiamaTikAutorizuotiemsVartuotojams();
+        Zingsniai.isitikintiKadVartotojasYraPrisijungimoPuslapyje(Konstantos.PRISIJUNGIMO_IDENTIFEKAVIMO_TEKSTAS);
     }
 
     @AfterMethod
     public void logout(ITestResult result) throws IOException {
         if (result.isSuccess()) {
-            Steps.closeBrowser();
+            Zingsniai.closeBrowser();
         } else {
             SimpleDateFormat time = new SimpleDateFormat("MM_dd_HH_ss");
             time.setTimeZone(TimeZone.getTimeZone("Europe/Vilnius"));
@@ -61,7 +75,7 @@ public class LoginTest {
             System.out.println(failedAt);
 
             String tcName = result.getName();
-            File srcshotFile = ((TakesScreenshot) Steps.getBrowser()).getScreenshotAs(OutputType.FILE);
+            File srcshotFile = ((TakesScreenshot) Zingsniai.getBrowser()).getScreenshotAs(OutputType.FILE);
             FileUtils.copyFile(srcshotFile, new File("screenshots/failedc/" + tcName + "_" + failedAt + ".png"));
         }
     }

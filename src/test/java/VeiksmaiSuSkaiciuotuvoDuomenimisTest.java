@@ -15,67 +15,43 @@ public class VeiksmaiSuSkaiciuotuvoDuomenimisTest {
 
     @BeforeMethod
     public void setUp() {
-        Steps.setUp(Steps.URL);
-        LoginTest.prisijugtiPriePaskyros();
+        Zingsniai.setUp(Zingsniai.URL);
+        Zingsniai.ivestiEsamusPrisijungimoDuomenis(Konstantos.ESAMAS_VARTOTOJAS, Konstantos.SLAPTAZODIS);
+        Zingsniai.paspaustiPrisijungimoMygtuka();
     }
 
     @Test
-    public void ivestiDuomenisSkaiciavimui() {
-        Steps.ivestiDuomenisSkaiciavimui(Constants.PIRMAS_SKAICIUS, Constants.ANTRAS_SKAICIUS, Constants.VEIKSMAS);
-        Steps.paspaustiSkaiciuotiMygtuka();
-        Steps.isitikintiKadDuomenysSuskaiciuotiTeisinga(Constants.PIRMAS_SKAICIUS, Constants.ANTRAS_SKAICIUS, Constants.VEIKSMO_ZENKLAS, Constants.REZULTATAS);
+    public void isitikintiKadNaujasIrasasBuvoSukurtas() {
+        Zingsniai.ivestiDuomenisSkaiciavimui(Konstantos.PIRMAS_SKAICIUS, Konstantos.ANTRAS_SKAICIUS, Konstantos.VEIKSMAS);
+        Zingsniai.paspaustiSkaiciuotiMygtuka();
+        Zingsniai.isitikintiKadDuomenysSuskaiciuotiTeisinga(Konstantos.PIRMAS_SKAICIUS, Konstantos.ANTRAS_SKAICIUS, Konstantos.VEIKSMO_ZENKLAS, Konstantos.REZULTATAS);
     }
 
     @Test
-    public void ivestiNeteisingusDuomenisSkaiciavimui() {
-        Steps.ivestiDuomenisSkaiciavimui(Constants.NETEISINGAS_SKAICIUS, Constants.ANTRAS_SKAICIUS, Constants.VEIKSMAS);
-        Steps.paspaustiSkaiciuotiMygtuka();
-        Steps.isitikintiKadDuomenysNebuvoSuskaiciuoti(Constants.VALIDACJOS_KLAIDA);
+    public void isitikintiKadIrasasNebuvoSukurtasIvedusNeteisingusDuomenis() {
+        Zingsniai.ivestiDuomenisSkaiciavimui(Konstantos.NETEISINGAS_SKAICIUS, Konstantos.ANTRAS_SKAICIUS, Konstantos.VEIKSMAS);
+        Zingsniai.paspaustiSkaiciuotiMygtuka();
+        Zingsniai.isitikintiKadDuomenysNebuvoSuskaiciuoti(Konstantos.VALIDACJOS_KLAIDA);
     }
 
     @Test
-    public void patvirtintiKadIeskomasIrasasBuvoRastas() {
-        Steps.pasirinktiAtliktosOperacijosPuslapi();
-        Steps.surastiIrasaPagalEgzistuojantiId(Constants.EGZISTUOJANTIS_ID);
-        Steps.isitikintiKadIrasasSuNurodytuIdBuvoRastas(Constants.EGZISTUOJANTIS_ID);
+    public void isitikintiKadIeskomasIrasasBuvoRastas() {
+        Zingsniai.pasirinktiAtliktosOperacijosPuslapi();
+        Zingsniai.surastiIrasaPagalEgzistuojantiId(Konstantos.EGZISTUOJANTIS_ID);
+        Zingsniai.isitikintiKadIrasasSuNurodytuIdBuvoRastas(Konstantos.EGZISTUOJANTIS_ID);
     }
 
     @Test
-    public void patvirtinimasKadNeegzistuojantiIrasasNebuvoRastas() {
-        Steps.pasirinktiAtliktosOperacijosPuslapi();
-        Steps.surastiIrasaPagalEgzistuojantiId(Constants.NEEGZISTUOJANTIS_ID);
-        Steps.isitikintiKadIrasasSuNurodytuIdNebuvoRastas(Constants.NERASTO_IRASO_PATVIRTINIMO_TEKSTAS);
-    }
-
-    @Test
-    public void isitikintiKadIrasasBuvoIstrintas() {
-        Steps.pasirinktiAtliktosOperacijosPuslapi();
-        Steps.istrintiIrasaPagalEgzistuojantiId(Constants.ID_TRINIMUI);
-        Steps.surastiIrasaPagalEgzistuojantiId(Constants.ID_TRINIMUI);
-        Steps.isitikintiKadIrasasSuNurodytuIdNebuvoRastas(Constants.NERASTO_IRASO_PATVIRTINIMO_TEKSTAS);
-    }
-
-    @Test
-    public void isitikintiKadIrasasBuvoParedaguotas(){
-        Steps.pasirinktiAtliktosOperacijosPuslapi();
-        Steps.redaguotiEsamaIrasa(Constants.REDAGUOJAMAS_ID, Constants.REDAGUOJAMAS_PIRMAS_SKAICIUS,
-                Constants.REDAGUOJAMAS_ANTRAS_SKAICIUS, Constants.REDAGUOJAMO_VEIKSMO_ZENKLAS, Constants.REDAGUOJAMAS_REZULTATAS);
-        Steps.surastiIrasaPagalEgzistuojantiId(Constants.REDAGUOJAMAS_ID);
-        Steps.isitikintiKadIrasasBuvoAtnaujintas(Constants.REDAGUOJAMAS_REZULTATAS);
-    }
-
-    @Test
-    public void isitikintiKadIrasasNebuvoAtnaujintas(){
-        Steps.pasirinktiAtliktosOperacijosPuslapi();
-        Steps.redaguotiEsamaIrasa(Constants.REDAGUOJAMAS_ID, Constants.NETEISINGAS_SKAICIUS,
-                Constants.REDAGUOJAMAS_ANTRAS_SKAICIUS, Constants.REDAGUOJAMO_VEIKSMO_ZENKLAS, Constants.REDAGUOJAMAS_REZULTATAS);
-        Steps.isitikintiKadIrasasSuNurodytuIdNebuvoRastas(Constants.NERASTO_IRASO_PATVIRTINIMO_TEKSTAS);
+    public void isitikintiKadNeegzistuojantisIrasasNebuvoRastas() {
+        Zingsniai.pasirinktiAtliktosOperacijosPuslapi();
+        Zingsniai.surastiIrasaPagalEgzistuojantiId(Konstantos.NEEGZISTUOJANTIS_ID);
+        Zingsniai.isitikintiKadIeskomasIrasasNebuvoRastas(Konstantos.NERASTO_IRASO_PATVIRTINIMO_TEKSTAS);
     }
 
     @AfterMethod
     public void logout(ITestResult result) throws IOException {
         if (result.isSuccess()) {
-            Steps.closeBrowser();
+            Zingsniai.closeBrowser();
         } else {
             SimpleDateFormat time = new SimpleDateFormat("MM_dd_HH_ss");
             time.setTimeZone(TimeZone.getTimeZone("Europe/Vilnius"));
@@ -84,7 +60,7 @@ public class VeiksmaiSuSkaiciuotuvoDuomenimisTest {
             System.out.println(failedAt);
 
             String tcName = result.getName();
-            File srcshotFile = ((TakesScreenshot) Steps.getBrowser()).getScreenshotAs(OutputType.FILE);
+            File srcshotFile = ((TakesScreenshot) Zingsniai.getBrowser()).getScreenshotAs(OutputType.FILE);
             FileUtils.copyFile(srcshotFile, new File("screenshots/failedc/" + tcName + "_" + failedAt + ".png"));
         }
     }
